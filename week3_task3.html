@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>week1_RWD</title>
+        <link rel="stylesheet" href="RWD_test.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body class="body">
+        <nav>
+            <div class="flexview">
+                <div class="menu__left">My Website</div>
+                <div class="menu__right">
+                    <div class="right__item">Item1</div>
+                    <div class="right__item">Item2</div>
+                    <div class="right__item">Item3</div>
+                    <div class="right__item">Item4</div>
+                </div>
+               
+                <div  class="menu__mobile">
+                    <img onclick="showSidebar()" src="icons8-menu.svg" width="30" height="30">
+                      
+                <div> 
+                 <div class="sidebar">
+                    <div onclick="hideSidebar()"><img class='cancel' src="x.png" width="30" height="30"></div>
+                    <div class="right__item">Item1</div>
+                    <div class="right__item">Item2</div>
+                    <div class="right__item">Item3</div>
+                    <div class="right__item">Item4</div>
+                </div> 
+            </div>
+        </nav>
+
+
+        <div class="intro">Welcome to MyHome</div>
+        <div class="list">
+            <div id='smallbox' class="list__promo">
+                
+            </div>  
+        </div>
+        <div class="list">
+            <div id='left-box' class="list__1">
+            </div>
+        </div>
+
+
+        <script>
+            //sidebar 
+            function showSidebar(){
+                const sidebar = document.querySelector('.sidebar')
+                sidebar.style.display ='flex'
+
+            }
+            function hideSidebar(){
+                const sidebar = document.querySelector('.sidebar')
+                sidebar.style.display ='none'
+
+            }
+
+            //利用fetch, 取得json資料
+            //當網頁載入時
+            window.addEventListener('load', function(){
+                fetch('https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1')
+                .then(response =>response.json())
+                .then(data => {
+                    renderSpotList(data);
+                })
+            });
+            
+            //renderspot 函式
+            function renderSpotList(spot){
+                const spotData = spot.data.results;
+                const listDiv = document.querySelector('#smallbox');
+                const listDivleft= document.querySelector('#left-box')
+
+                for(let i=0; i<3;i++){
+                    let spotTitle = spotData[i].stitle;
+                    let imageURL = spotData[i].filelist.split('https://')[1]
+                    renderSpot(listDiv,'3-listbox',spotTitle, imageURL);//這邊前三個項目的所有內容
+                }
+                for(let i=3; i<4;i++){
+                    let spotTitle = spotData[i].stitle;
+                    let imageURL = spotData[i].filelist.split('https://')[1]
+                    renderSpotLeft(listDivleft,'left-box',spotTitle, imageURL);//這邊前三個項目的所有內容
+                }
+                for(let i=4; i<8;i++){
+                    let spotTitle = spotData[i].stitle;
+                    let imageURL = spotData[i].filelist.split('https://')[1]
+                    renderSpotRight(listDivleft,'right-box',spotTitle, imageURL);//這邊前三個項目的所有內容
+                }
+                for(let i=8; i<9;i++){
+                    let spotTitle = spotData[i].stitle;
+                    let imageURL = spotData[i].filelist.split('https://')[1]
+                    renderSpotLeft(listDivleft,'left-box',spotTitle, imageURL);//這邊前三個項目的所有內容
+                }
+                for(let i=9; i<15;i++){
+                    let spotTitle = spotData[i].stitle;
+                    let imageURL = spotData[i].filelist.split('https://')[1]
+                    renderSpotRight(listDivleft,'right-box',spotTitle, imageURL);//這邊前三個項目的所有內容
+                }
+            }
+            //function to render a spot
+            function renderSpot(parentElement,boxClass,spotTitle,imageURL){
+                const spotElement = document.createElement('div');
+                spotElement.classList.add('list__promo__item');
+                spotElement.classList.add(boxClass);
+
+                const spotContent=document.createElement('div');
+                spotContent.classList.add('list__promo__item__1');
+
+                const spotImage=document.createElement('div');
+                spotImage.classList.add('list__promo__item__pic');
+                spotImage.style.backgroundImage=`url('https://${imageURL}')`;
+
+                const spotWord = document.createElement('div');
+                spotWord.classList.add('list__promo__item__word');
+        
+
+                const spotTitleDiv =document.createElement('div');
+                spotTitleDiv.classList.add('list__promo__item__word__cont')
+                spotTitleDiv.textContent= spotTitle;
+                
+                spotWord.appendChild(spotTitleDiv);
+                spotContent.appendChild(spotImage);
+                spotContent.appendChild(spotWord);
+                spotElement.appendChild(spotContent);
+
+                parentElement.appendChild(spotElement);
+            }
+            function renderSpotLeft(parentElement,boxClass,spotTitle, imageURL){
+                const spotElement = document.createElement('div');
+                spotElement.classList.add('list__1__left');
+                spotElement.classList.add(boxClass);
+
+                const spotContent=document.createElement('div');
+                spotContent.classList.add('list__1__left__1');
+                spotContent.style.backgroundImage=`url('https://${imageURL}')`;
+
+                const spotImage=document.createElement('img');
+                spotImage.classList.add('list__1__right__item__star');
+                spotImage.src='star.png';
+
+                const spotTitleDiv =document.createElement('div');
+                spotTitleDiv.classList.add('list__1__title')
+                spotTitleDiv.textContent= spotTitle;
+                
+                spotElement.appendChild(spotContent);
+                spotContent.appendChild(spotImage);
+                spotContent.appendChild(spotTitleDiv);
+                
+
+                parentElement.appendChild(spotElement);
+            }
+            function renderSpotRight(parentElement,boxClass,spotTitle, imageURL){
+                const spotElement = document.createElement('div');
+                spotElement.classList.add('list__1__right');
+                spotElement.classList.add(boxClass);
+
+                const spotContent=document.createElement('div');
+                spotContent.classList.add('list__1__right__1');
+                spotContent.style.backgroundImage=`url('https://${imageURL}')`;
+
+                const spotImage=document.createElement('img');
+                spotImage.classList.add('list__1__right__item__star');
+                spotImage.src='star.png';
+
+                const spotTitleDiv =document.createElement('div');
+                spotTitleDiv.classList.add('list__1__title')
+                spotTitleDiv.textContent= spotTitle;
+                
+                spotElement.appendChild(spotContent);
+                spotContent.appendChild(spotImage);
+                spotContent.appendChild(spotTitleDiv);
+                
+
+                parentElement.appendChild(spotElement);
+            }
+
+        </script>
+        
+    </body>
+    
+    
+</html>
