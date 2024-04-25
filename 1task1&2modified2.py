@@ -35,11 +35,11 @@ with open('spot1.csv',mode='a',newline='') as file:
         #從info裡面找ststion_loca的車站在對上地名
         info= i['info']
         #一堆字包含站名
-        District='unknow'
+        District='No MRT station'
         for station,district_name in station_loca.items():
             if station in info:
                 District= district_name
-                break
+                
         longitude= i['longitude']
         latitude= i['latitude']
         filelist= i['filelist']
@@ -63,7 +63,8 @@ with req.urlopen(URL1) as file:
                     attra[station].append(spottitle)
                 else:
                     attra[station]=[spottitle]
-                break
+            elif '新北投' in info:
+                attra[station] = ['北投區']
             
             #從info裡面找ststion_loca的車站在對上地名
 print(attra)        
@@ -83,6 +84,7 @@ with req.urlopen(URL1) as file:
     data=json.load(file)
     #建一個字典來記錄
     attra=dict()
+    print(len(data['data']['results']))
     for i  in data['data']['results']:
         spottitle= i['stitle']
         info= i['info']
@@ -93,7 +95,7 @@ with req.urlopen(URL1) as file:
                     attra[station].append(spottitle)
                 else:
                     attra[station]=[spottitle]
-                break
+                
             
             #從info裡面找ststion_loca的車站在對上地名
 print(attra)        
