@@ -1,16 +1,21 @@
-#Task1
 
 import json
 import csv
+import urllib.request as req
+#網路連線
+import ssl 
+ssl._create_default_https_context = ssl._create_unverified_context
 #StationName,AttractionTitle1,AttractionTitle2,AttractionTitle3,
 
-with open('spot.csv',mode='w',newline='') as newfile:
+
+with open('spot1.csv',mode='w',newline='') as newfile:
     writer= csv.writer(newfile)
 #SpotTitle,District,Longitude,Latitude,ImageURL
 
-
+URL1='https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-1'
+URL2='https://padax.github.io/taipei-day-trip-resources/taipei-attractions-assignment-2'
 #建立一個站名對地名的字典
-with open('taipei-attractions-assignment-2',mode='r',encoding='utf-8') as file2:
+with req.urlopen(URL2) as file2:
     data2=json.load(file2)
     station_loca=dict()
     for i in data2['data']:
@@ -20,10 +25,10 @@ with open('taipei-attractions-assignment-2',mode='r',encoding='utf-8') as file2:
         station_loca[StationName]=District
     print(station_loca)
 
-with open('taipei-attractions-assignment-1',mode='r',encoding='utf-8') as file:
+with req.urlopen(URL1) as file:
     data=json.load(file)
 #SpotTitle,District,Longitude,Latitude,ImageURL
-with open('spot.csv',mode='a',newline='') as file:
+with open('spot1.csv',mode='a',newline='') as file:
     writer = csv.writer(file)
     for i  in data['data']['results']:
         spottitle= i['stitle']
@@ -44,7 +49,7 @@ with open('spot.csv',mode='a',newline='') as file:
 
 
 
-with open('taipei-attractions-assignment-1',mode='r',encoding='utf-8') as file:
+with req.urlopen(URL1) as file:
     data=json.load(file)
     #建一個字典d
     attra=dict()
@@ -64,18 +69,17 @@ with open('taipei-attractions-assignment-1',mode='r',encoding='utf-8') as file:
 print(attra)        
             #一堆字包含站名
     
-with open('mrt.csv',mode='a',newline='') as file:
+with open('mrt1.csv',mode='a',newline='') as file:
     writer = csv.writer(file)
     for station, spottitle in attra.items():
         writer.writerow([station]+spottitle)      
 
 
 #mrt.csv
-with open('mrt.csv',mode='w',newline='') as newfile:
+with open('mrt1.csv',mode='w',newline='') as newfile:
     writer= csv.writer(newfile)
 
-
-with open('taipei-attractions-assignment-1',mode='r',encoding='utf-8') as file:
+with req.urlopen(URL1) as file:
     data=json.load(file)
     #建一個字典來記錄
     attra=dict()
@@ -95,15 +99,12 @@ with open('taipei-attractions-assignment-1',mode='r',encoding='utf-8') as file:
 print(attra)        
             
     
-with open('mrt.csv',mode='a',newline='') as file:
+with open('mrt1.csv',mode='a',newline='') as file:
     writer = csv.writer(file)
     for station, spottitle in attra.items():
         writer.writerow([station]+spottitle)       
 
-
 #Task2
-
-
 #網路連線
 import ssl 
 #相關資源
