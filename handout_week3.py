@@ -3,6 +3,7 @@ import csv
 import urllib.request as req
 #網路連線
 import ssl 
+import bs4 
 
 ssl._create_default_https_context = ssl._create_unverified_context
 #StationName,AttractionTitle1,AttractionTitle2,AttractionTitle3,
@@ -93,3 +94,48 @@ with open('mrt1.csv',mode='a',newline='') as file:
 
 
 # --------------------Task2------------------ 
+#建一個csv檔
+with open('ptt_lottery.csv',mode='w',newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['標題','推文次數','日期'])
+
+def Getdata(url):
+    
+    request =req.Request(url, headers={
+        'cookie':'over18=1',
+        'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+    })
+
+
+    with req.urlopen(request) as response:
+        data = response.read().decode('utf-8')
+
+    root=bs4.BeautifulSoup(data, 'html.parser')
+
+    # 喜歡次數
+    likes = root.find_all('div', class_='nrec')
+    # 標題
+    titles = root.find_all('div', class_='title')
+    # 日期
+    dates = root.find_all('div', class_='date')
+    #利用修改的方式寫入csv檔中
+    with open('ptt_lottery.csv',mode='a',newline='') as file:
+        writer = csv.writer(file)
+        for i in range(len(titles)):
+            title_row = titles[i].text.strip()
+            # 檢查是否找到喜歡次數，如果沒有就設定為 0
+            if likes[i].span != None:
+                like_row = likes[i].text.strip() 
+            else:
+                like_row = '0'
+            date_row = dates[i].text.strip()
+            writer.writerow([title_row, like_row, date_row])
+    #抓取上一頁的網址
+    nextLink=root.find('a',string='‹ 上頁') 
+    return nextLink['href']   
+ 
+pageURL='https://www.ptt.cc/bbs/Lottery/index.html'
+count=0
+while count<3:
+    pageURL='https://www.ptt.cc'+Getdata(pageURL)
+    count+=1
