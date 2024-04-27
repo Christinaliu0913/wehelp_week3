@@ -4,18 +4,18 @@ import ssl
 from urllib import request
 import csv
 import bs4 
-import datetime  # 导入 datetime 模块
+
 
 #略過驗證
 ssl._create_default_https_context = ssl._create_unverified_context
 import urllib.request as req
 
-# 建立 CSV 文件并写入表头
+# 建立 CSV 文件
 with open('ptt_lottery.csv',mode='w',newline='') as file:
     writer = csv.writer(file)
     writer.writerow(['ArticleTitle', 'Like/DislikeCount', 'PublishTime'])
 
-# 定义函数用于获取数据
+# 定義函數獲取資料
 def Getdata(url):
     #連線至Lottery網站首頁
     request = req.Request(url, headers={
@@ -29,7 +29,7 @@ def Getdata(url):
     
         
 
-    # 获取喜欢次数、标题和日期
+    #獲取相關資料
     likes = root.find_all('div', class_='nrec')
     titles = root.find_all('div', class_='title')
     dates = root.find_all('div', class_='date')
@@ -82,7 +82,7 @@ def Getdata(url):
     nextLink = root.find('a', string='‹ 上頁') 
     return nextLink['href']   
 
-# 初始页面
+# 初始頁面並尋找上一頁
 pageURL = 'https://www.ptt.cc/bbs/Lottery/index.html'
 count = 0
 while count < 3:
